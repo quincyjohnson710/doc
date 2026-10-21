@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>MediRemote Jobs · hospital & online</title>
+    <!-- Font Awesome 5 (free) for icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <!-- Google Font: Inter + system fallback -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7fc;
+            color: #1e2b3c;
+            line-height: 1.5;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* main container – responsive max width */
+        .app-wrapper {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 20, 50, 0.04);
+            border: 1px solid #eef2f6;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #0a5f8c;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-area i {
+            font-size: 1.9rem;
+            color: #0a7e9e;
+        }
+
+        .badge {
+            background: #e6f0f9;
+            color: #0a5f8c;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid #cfddee;
+            padding: 0.5rem 1.1rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2f455b;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .filter-btn i {
+            font-size: 0.8rem;
+            color: #5f7d9c;
+        }
+
+        .filter-btn.active {
+            background: #0a5f8c;
+            border-color: #0a5f8c;
+            color: white;
+        }
+
+        .filter-btn.active i {
+            color: white;
+        }
+
+        .filter-btn:hover {
+            background: #e1ecf7;
+            border-color: #9bb9d4;
+        }
+
+        .filter-btn.active:hover {
+            background: #0b4e72;
+        }
+
+        /* stats row */
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0 0.2rem;
+        }
+
+        .stats-row p {
+            font-size: 0.95rem;
+            color: #416b8a;
+            font-weight: 500;
+        }
+
+        .stats-row strong {
+            color: #0a5f8c;
+            font-weight: 700;
+        }
+
+        .sort-select {
+            background: white;
+            border: 1px solid #cfddee;
+            border-radius: 40px;
+            padding: 0.45rem 1rem;
+            font-size: 0.85rem;
+            color: #1e2b3c;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* job grid */
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.4rem;
+            margin-bottom: 2rem;
+        }
+
+        /* job card */
+        .job-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem 1.3rem 1.3rem 1.3rem;
+            box-shadow: 0 6px 18px rgba(0, 30, 60, 0.04);
+            border: 1px solid #e3ebf3;
+            transition: transform 0.15s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 28px -8px rgba(10, 80, 120, 0.12);
+            border-color: #b8d2e9;
+        }
+
+        .job-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #e8f2fa;
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #0a5f8c;
+            margin-bottom: 0.9rem;
+            align-self: flex-start;
+        }
+
+        .job-type-badge i {
+            font-size: 0.7rem;
+        }
+
+        .job-type-badge.remote {
+            background: #e4f2e9;
+            color: #1c7840;
+        }
+
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            color: #0b2a3f;
+            letter-spacing: -0.02em;
+        }
+
+        .employer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+            color: #406a88;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .employer i {
+            color: #7d9eb9;
+            width: 18px;
+            font-size: 0.95rem;
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 1.3rem;
+            font-size: 0.82rem;
+            color: #55738b;
+            margin: 0.75rem 0 1rem 0;
+            padding: 0.6rem 0;
+            border-top: 1px dashed #d9e4ef;
+            border-bottom: 1px dashed #d9e4ef;
+        }
+
+        .job-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .job-meta i {
+            width: 16px;
+            color: #7d9eb9;
+        }
+
+        .fee-tag {
+            background: #fff6e0;
+            color: #9b6f1a;
+            border-radius: 40px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 1.2rem;
+            align-self: flex-start;
+            border: 1px solid #f0e0bb;
+        }
+
+        .fee-tag i {
+            font-size: 0.8rem;
+        }
+
+        .apply-btn {
+            background: #0a5f8c;
+            border: none;
+            color: white;
+            padding: 0.9rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: auto;
+            box-shadow: 0 6px 12px -6px rgba(10, 95, 140, 0.3);
+        }
+
+        .apply-btn i {
+            font-size: 0.9rem;
+            transition: transform 0.15s;
+        }
+
+        .apply-btn:hover {
+            background: #0b4e72;
+        }
+
+        .apply-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        .apply-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* payment modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 30, 45, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            max-width: 480px;
+            width: 100%;
+            border-radius: 2rem;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.25);
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            0% { opacity: 0.6; transform: translateY(12px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b2a3f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-box h3 i {
+            color: #0a7e9e;
+        }
+
+        .modal-sub {
+            color: #4c6e88;
+            font-size: 0.95rem;
+            margin-bottom: 1.8rem;
+            border-left: 4px solid #b6d4ea;
+            padding-left: 1rem;
+            background: #f6fafd;
+            border-radius: 0 8px 8px 0;
+            padding: 0.8rem 1rem;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #d7e3ee;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.9rem;
+            cursor: pointer;
+            transition: all 0.1s;
+            background: #ffffff;
+        }
+
+        .payment-option.selected {
+            border: 2px solid #0a5f8c;
+            background: #f2f9ff;
+            box-shadow: 0 4px 10px rgba(10, 95, 140, 0.08);
+        }
+
+        .payment-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0a5f8c;
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .payment-option label {
+            flex: 1;
+            font-weight: 500;
+            color: #1f3b50;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .payment-option label i {
+            color: #496f8c;
+            font-size: 1.2rem;
+            margin-right: 8px;
+            width: 22px;
+        }
+
+        .payment-option .price {
+            font-weight: 700;
+            color: #0b4e72;
+            font-size: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary, .btn-primary {
+            flex: 1;
+            padding: 0.9rem 1rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: #f0f4f9;
+            color: #2f4a62;
+            border: 1px solid #d7e1eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e2eaf2;
+        }
+
+        .btn-primary {
+            background: #0a5f8c;
+            color: white;
+            box-shadow: 0 8px 16px -6px #0a5f8c60;
+        }
+
+        .btn-primary:hover {
+            background: #0b4e72;
+        }
+
+        .btn-primary:disabled {
+            background: #b3c9da;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .modal-note {
+            font-size: 0.78rem;
+            color: #6c8aa5;
+            text-align: center;
+            margin-top: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        /* toast / feedback */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1d3d54;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+            max-width: 90vw;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .toast i {
+            color: #8edd9b;
+            font-size: 1.2rem;
+        }
+
+        /* empty state (not used but keeps things safe) */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 2rem;
+            color: #4b6f8a;
+        }
+
+        /* footer / copyright */
+        .footer-note {
+            text-align: center;
+            padding: 1.5rem 0 0.5rem;
+            color: #6b8aa5;
+            font-size: 0.8rem;
+            border-top: 1px solid #d5e2ee;
+            margin-top: 1.5rem;
+        }
+
+        /* responsiveness */
+        @media (max-width: 640px) {
+            body {
+                padding: 0.7rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem 1.2rem;
+            }
+            .filter-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.4rem;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+            }
+            .filter-btn {
+                flex-shrink: 0;
+            }
+            .stats-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.7rem;
+            }
+            .job-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-box {
+                padding: 1.8rem 1.2rem;
+            }
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* touch-friendly */
+        button, .filter-btn, .payment-option {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* skeleton not used, but nice fallback */
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- header -->
+    <header class="header">
+        <div class="logo-area">
+            <i class="fas fa-hospital-user"></i>
+            <span>MediRemote</span>
+        </div>
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all"><i class="fas fa-th-large"></i> All jobs</button>
+            <button class="filter-btn" data-filter="hospital"><i class="fas fa-hospital"></i> Hospital</button>
+            <button class="filter-btn" data-filter="online"><i class="fas fa-wifi"></i> Online / Remote</button>
+        </div>
+    </header>
+
+    <!-- stats & sort -->
+    <div class="stats-row">
+        <p><strong id="jobCount">8</strong> open positions · apply after small fee</p>
+        <select class="sort-select" id="sortSelect" aria-label="Sort jobs">
+            <option value="default">Sort: Featured</option>
+            <option value="feeLow">Application fee (low to high)</option>
+            <option value="feeHigh">Application fee (high to low)</option>
+        </select>
+    </div>
+
+    <!-- job grid -->
+    <div class="job-grid" id="jobGrid">
+        <!-- dynamically injected via JS -->
+    </div>
+
+    <!-- footer -->
+    <div class="footer-note">
+        <i class="fas fa-lock" style="margin-right: 4px;"></i> secure payment · instant application access
+    </div>
+</div>
+
+<!-- payment modal -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal-box">
+        <h3><i class="fas fa-credit-card"></i> Confirm application</h3>
+        <div class="modal-sub" id="modalJobInfo">Front‑Desk Medical Assistant · $4.99 fee</div>
+
+        <div class="payment-options" id="paymentOptions">
+            <!-- radio options created by JS or static -->
+            <div class="payment-option selected" data-method="card">
+                <input type="radio" name="payment" id="payCard" value="card" checked>
+                <label for="payCard"><i class="fas fa-credit-card"></i> Credit / Debit card <span class="price">$4.99</span></label>
+            </div>
+            <div class="payment-option" data-method="paypal">
+                <input type="radio" name="payment" id="paypal" value="paypal">
+                <label for="paypal"><i class="fab fa-paypal"></i> PayPal <span class="price">$4.99</span></label>
+            </div>
+            <div class="payment-option" data-method="apple">
+                <input type="radio" name="payment" id="applePay" value="apple">
+                <label for="applePay"><i class="fab fa-apple"></i> Apple Pay <span class="price">$4.99</span></label>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-secondary" id="cancelPayment"><i class="fas fa-times"></i> Cancel</button>
+            <button class="btn-primary" id="confirmPayment"><i class="fas fa-check-circle"></i> Pay & apply</button>
+        </div>
+        <div class="modal-note">
+            <i class="fas fa-shield-alt"></i> one-time fee · your application is submitted after payment
+        </div>
+    </div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i> <span id="toastMessage">Application submitted!</span>
+</div>
+
+<script>
+    (function() {
+        // ---------- JOB DATA (hospital & online only) ----------
+        const jobs = [
+            {
+                id: 1,
+                title: "Registered Nurse – Emergency Dept",
+                employer: "St. Mary's General Hospital",
+                type: "hospital",
+                location: "Chicago, IL",
+                salary: "$48/hr",
+                fee: 4.99,
+                posted: "2 days ago",
+                icon: "fas fa-hospital"
+            },
+            {
+                id: 2,
+                title: "Telehealth Triage Nurse (Remote)",
+                employer: "VirtualCare Health",
+                type: "online",
+                location: "Remote · US",
+                salary: "$38/hr",
+                fee: 3.49,
+                posted: "5 hours ago",
+                icon: "fas fa-wifi"
+            },
+            {
+                id: 3,
+                title: "Medical Lab Technician",
+                employer: "Cleveland Clinic",
+                type: "hospital",
+                location: "Cleveland, OH",
+                salary: "$32/hr",
+                fee: 2.99,
+                posted: "1 day ago",
+                icon: "fas fa-hospital"
+            },
+            {
+                id: 4,
+                title: "Remote Medical Coder",
+                employer: "HealthCode Solutions",
+                type: "online",
+                location: "Remote · US",
+                salary: "$28/hr",
+                fee: 4.49,
+                posted: "3 days ago",
+                icon: "fas fa-wifi"
+            },
+            {
+                id: 5,
+                title: "Patient Care Coordinator",
+                employer: "Mayo Clinic",
+                type: "hospital",
+                location: "Rochester, MN",
+                salary: "$26/hr",
+                fee: 3.99,
+                posted: "6 hours ago",
+                icon: "fas fa-hospital"
+            },
+            {
+                id: 6,
+                title: "Telemedicine Psychiatrist (Remote)",
+                employer: "Mindful Health Online",
+                type: "online",
+                location: "Remote · US",
+                salary: "$120/hr",
+                fee: 9.99,
+                posted: "1 week ago",
+                icon: "fas fa-wifi"
+            },
+            {
+                id: 7,
+                title: "Hospital Pharmacist",
+                employer: "Johns Hopkins Hospital",
+                type: "hospital",
+                location: "Baltimore, MD",
+                salary: "$55/hr",
+                fee: 5.99,
+                posted: "12 hours ago",
+                icon: "fas fa-hospital"
+            },
+            {
+                id: 8,
+                title: "Remote Health Coach",
+                employer: "Wellness Online Inc.",
+                type: "online",
+                location: "Remote · global",
+                salary: "$22/hr",
+                fee: 2.49,
+                posted: "4 days ago",
+                icon: "fas fa-wifi"
+            }
+        ];
+
+        // ---------- STATE ----------
+        let currentFilter = 'all';
+        let currentSort = 'default';
+        let selectedJobForPayment = null; // will hold the job object
+        let activePaymentMethod = 'card'; // default
+
+        // ---------- DOM refs ----------
+        const jobGrid = document.getElementById('jobGrid');
+        const jobCountSpan = document.getElementById('jobCount');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const sortSelect = document.getElementById('sortSelect');
+        const modalOverlay = document.getElementById('paymentModal');
+        const modalJobInfo = document.getElementById('modalJobInfo');
+        const cancelBtn = document.getElementById('cancelPayment');
+        const confirmBtn = document.getElementById('confirmPayment');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // ---------- RENDER JOBS ----------
+        function renderJobs() {
+            // filter by type
+            let filteredJobs = [...jobs];
+            if (currentFilter === 'hospital') {
+                filteredJobs = filteredJobs.filter(j => j.type === 'hospital');
+            } else if (currentFilter === 'online') {
+                filteredJobs = filteredJobs.filter(j => j.type === 'online');
+            }
+
+            // sorting
+            if (currentSort === 'feeLow') {
+                filteredJobs.sort((a, b) => a.fee - b.fee);
+            } else if (currentSort === 'feeHigh') {
+                filteredJobs.sort((a, b) => b.fee - a.fee);
+            }
+            // 'default' keeps original order (or we could sort by id)
+
+            // update count
+            jobCountSpan.textContent = filteredJobs.length;
+
+            // if empty (should not happen with our data, but safe)
+            if (filteredJobs.length === 0) {
+                jobGrid.innerHTML = `<div class="no-results"><i class="fas fa-search" style="font-size:2rem; margin-bottom:1rem; display:block; color:#9bb7d0;"></i>No jobs match this filter.</div>`;
+                return;
+            }
+
+            // build cards
+            let html = '';
+            filteredJobs.forEach(job => {
+                const typeLabel = job.type === 'hospital' ? 'Hospital' : 'Online / Remote';
+                const typeIcon = job.type === 'hospital' ? 'fa-hospital' : 'fa-wifi';
+                const badgeClass = job.type === 'online' ? 'remote' : '';
+
+                html += `
+                    <div class="job-card" data-job-id="${job.id}">
+                        <div class="job-type-badge ${badgeClass}">
+                            <i class="fas ${typeIcon}"></i> ${typeLabel}
+                        </div>
+                        <div class="job-title">${job.title}</div>
+                        <div class="employer">
+                            <i class="fas fa-building"></i> ${job.employer}
+                        </div>
+                        <div class="job-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                            <span><i class="fas fa-clock"></i> ${job.posted}</span>
+                            <span><i class="fas fa-dollar-sign"></i> ${job.salary}</span>
+                        </div>
+                        <div class="fee-tag">
+                            <i class="fas fa-lock"></i> Application fee $${job.fee.toFixed(2)}
+                        </div>
+                        <button class="apply-btn" data-job-id="${job.id}" data-fee="${job.fee}" data-title="${job.title.replace(/"/g, '&quot;')}">
+                            <span>Apply now</span> <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            jobGrid.innerHTML = html;
+
+            // attach event listeners to all apply buttons
+            document.querySelectorAll('.apply-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const jobId = parseInt(this.dataset.jobId, 10);
+                    const job = jobs.find(j => j.id === jobId);
+                    if (job) {
+                        openPaymentModal(job);
+                    }
+                });
+            });
+        }
+
+        // ---------- PAYMENT MODAL LOGIC ----------
+        function openPaymentModal(job) {
+            selectedJobForPayment = job;
+            // update modal text
+            modalJobInfo.textContent = `${job.title} · ${job.employer} · $${job.fee.toFixed(2)} fee`;
+            // update prices in radio labels (optional, but we show dynamic fee)
+            document.querySelectorAll('.payment-option .price').forEach(el => {
+                el.textContent = `$${job.fee.toFixed(2)}`;
+            });
+
+            // reset selected payment option (visual)
+            paymentOptions.forEach(opt => opt.classList.remove('selected'));
+            const defaultOption = document.querySelector('.payment-option[data-method="card"]');
+            if (defaultOption) {
+                defaultOption.classList.add('selected');
+                const radio = defaultOption.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+                activePaymentMethod = 'card';
+            }
+
+            modalOverlay.classList.add('show');
+        }
+
+        function closePaymentModal() {
+            modalOverlay.classList.remove('show');
+            selectedJobForPayment = null;
+        }
+
+        // payment option visual selection
+        paymentOptions.forEach(opt => {
+            const radio = opt.querySelector('input[type="radio"]');
+            // click on container selects radio
+            opt.addEventListener('click', function(e) {
+                // don't interfere if clicking directly on radio (it works anyway)
+                if (e.target.tagName !== 'INPUT') {
+                    radio.checked = true;
+                }
+                // remove selected class from all
+                paymentOptions.forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                activePaymentMethod = this.dataset.method;
+            });
+            // if radio gets changed via keyboard etc.
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    paymentOptions.forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    activePaymentMethod = opt.dataset.method;
+                }
+            });
+        });
+
+        // Confirm payment -> simulate successful payment, then show toast and close.
+        function handleConfirmPayment() {
+            if (!selectedJobForPayment) return;
+
+            // disable button to prevent double submission (simulate processing)
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing…';
+
+            // simulate network request
+            setTimeout(() => {
+                // success
+                const jobTitle = selectedJobForPayment.title;
+                closePaymentModal();
+
+                // show toast
+                toastMessage.textContent = `✅ Payment successful! Application sent for “${jobTitle}”.`;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3800);
+
+                // restore confirm button state
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay & apply';
+
+                // optionally reset selection
+                selectedJobForPayment = null;
+            }, 900);
+        }
+
+        // ---------- TOAST HANDLER (with adjustable message) ----------
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // ---------- FILTER & SORT EVENT LISTENERS ----------
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderJobs();
+            });
+        });
+
+        sortSelect.addEventListener('change', function() {
+            currentSort = this.value;
+            renderJobs();
+        });
+
+        // modal cancel
+        cancelBtn.addEventListener('click', closePaymentModal);
+        // click on overlay closes modal (but not on modal box itself)
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                closePaymentModal();
+            }
+        });
+
+        // confirm payment button
+        confirmBtn.addEventListener('click', handleConfirmPayment);
+
+        // close modal with ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
+                closePaymentModal();
+            }
+        });
+
+        // initial render
+        renderJobs();
+
+        // Ensure that if any apply button is dynamically added after render (but it's only via renderJobs, so fine)
+    })();
+</script>
+
+<!-- optional fallback for older browsers -->
+<noscript>Your browser does not support JavaScript. Please enable it to see jobs.</noscript>
+</body>
+</html>
